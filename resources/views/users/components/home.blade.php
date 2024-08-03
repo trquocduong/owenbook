@@ -170,9 +170,5 @@ use Illuminate\Support\Str;
         </div>
         @endforeach
     </div>
-
 </div>
-  
-
-    
 @endsection
