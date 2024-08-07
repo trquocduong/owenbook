@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class categories extends Model
 {
     use HasFactory;
-    protected $table = 'categories';
-    
     public function queryCat()
     {
-        return Category::whereNull('category_id');
+        return Categories::whereNull('category_id');
     }
     protected $guarded = [];
     public function products()
     {
-        return $this->hasMany(Products::class);
+        return $this->hasMany(Products::class, 'categories_id');
     }
 }

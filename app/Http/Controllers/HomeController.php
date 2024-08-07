@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-use App\Models\Category;
+use App\Models\categories;
 use App\Models\Products;
 class HomeController extends Controller
 {
     //trang chủ
     public function index(){
-        $category = Category::orderBy('id', 'desc')->limit(6)->get();
+        $category = categories::orderBy('id', 'desc')->limit(6)->get();
         $products = Products::orderBy('created_at', 'desc')->paginate(8);
         $bannersale = Products::orderBy('sale', 'desc')->limit(1)->first();
         $sale =Products::where('sale', '>', 0)

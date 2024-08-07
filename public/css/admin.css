@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(to bottom, #003366 10%, #ffffff 70%);
+}
+.fixed-card {
+    position: fixed;
+    top: 20px; /* khoảng cách từ đầu trang */
+    left: 30px;
+    width: 300px;
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 5%; /* đảm bảo phần tử nằm trên các phần tử khác */
+}
+.navbar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.nav-item {
+    width: 100%;
+}
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    background-color: #f5f5f5; /* Rounded corners */
+    transition: background-color 0.2s;
+}
+.nav-link:hover {
+    background-color: #e0e0e0; /* Light gray background on hover */
+}
+.icon-container {
+    margin-right: 0.5rem;
+}
