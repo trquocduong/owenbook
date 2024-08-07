@@ -23,6 +23,9 @@ Route::prefix('/')->controller(HomeController::class)->group(function(){
 Route::prefix('/')->controller(AuthController::class)->group(function(){
     Route::get('/login','login')->name('login');
     Route::get('/register','register')->name('register');
+    Route::post('register-post','register_post')->name('register-post');
+    Route::post('login-post','login_post')->name('login-post');
+    Route::post('logout','logout')->name('logout');
 });
 Route::prefix('/')->controller(CartController::class)->group(function(){
     Route::get('/heart','heart')->name('heart');

@@ -1,4 +1,7 @@
-<nav class="navbar navbar-expand-lg bg-body-light mt-3">
+@php
+use Illuminate\Support\Str;
+@endphp
+<nav class="navbar navbar-expand-lg bg-body-light shadow-sm">
     <div class="container-fluid">
         <div class="d-flex align-items-center me-auto">
             <img src="{{ asset('img/logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 100px; height: auto;">
@@ -8,7 +11,35 @@
         </form>
         <div class="d-flex align-items-center ms-auto">
             <div class="d-none d-lg-flex">
+                @if(Auth::check())
+                <nav class="navbar navbar-expand-lg bg-body-light">
+                    <div class="container-fluid">
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li class="nav-item dropdown p-2">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ asset('uploads/'.Auth::user()->img) }}" width="30px" height="30px" style="border-radius: 50%"/>
+                            </a>
+                            <ul class="dropdown-menu mt-2">
+                              <li><a class="dropdown-item" href="#">Xin chào: {{ Str::limit(Auth::user()->name , 5)}}</a></li>
+                              <li><a class="dropdown-item" href="#">Thông tin cá nhân.</a></li>
+                              <li><a class="dropdown-item" href="#">Đơn hàng của bạn.</a></li>
+                              <li><a class="dropdown-item" href="#">Đỗi mật khẩu.</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a href="#" class="dropdown-item" onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">Đăng xuất </a></li>
+                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                             @csrf
+                                         </form>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </nav>
+                @else 
                 <a href="{{route('login')}}" class="nav-link p-2 fs-5"><i class="fa-regular fa-user"></i></a>
+                @endif
             </div>
             <div>
                 <a href="{{route('cart')}}" class="nav-link p-2 fs-5"><i class="fa-solid fa-cart-shopping"></i></a>

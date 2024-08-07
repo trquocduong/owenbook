@@ -69,9 +69,11 @@ use Illuminate\Support\Str;
 <div class="container">
     <div class="row text-center">
         @foreach ($sale as $item)
-        <div class="col-6 col-md-3 col-sm-6 mb-4">
+        <div class="col-6 col-md-3 col-lg-2 mb-4">
             <div class="card shadow-lg d-flex flex-column position-relative">
-                <img src="{{asset('uploads/'.$item->img)}}" class="card-img-top h-50" alt="Card image">
+              <div class="product-image mt-2">
+                <img src="{{asset('uploads/'.$item->img)}}" class=" lazyloaded" alt="Card image">
+              </div>
                 <div class="icons-overlay">
                     <div>
                     <i class="fas fa-eye text-white fs-3 p-2"></i>
@@ -82,9 +84,11 @@ use Illuminate\Support\Str;
                 </div>
                 <span class="discount-label bg-danger">{{$item->sale}}%</span>
                 <div class="card-body">
-                    <h5 class="card-title">{{ Str::limit($item->name, 20) }}</h5>
+                  <div style="height: 70px">
+                    <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
+                </div>
                     <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
-                    <a href="#" class="btn btn-danger">Thêm vào giỏ hàng</a>
+                    <a href="#" class="btn btn-danger"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
                 </div>
             </div>
         </div>
@@ -97,25 +101,31 @@ use Illuminate\Support\Str;
 <div class="container">
     <div class="row text-center">
         @foreach ($products as $item)
-        <div class="col-6 col-md-3 col-sm-6 mb-4">
-            <div class="card shadow-lg d-flex flex-column position-relative">
-                <img src="{{asset('uploads/'.$item->img)}}" class="card-img-top h-50" alt="Card image">
-                <div class="icons-overlay">
-                    <div>
-                    <i class="fas fa-eye text-white fs-3 p-2"></i>
-                </div> 
-                <div >
-                    <i class="fas fa-heart text-white fs-3 p-2"></i>
-                </div>
-                </div>
-                <span class="discount-label bg-danger">New</span>
-                <div class="card-body">
-                    <h5 class="card-title">{{ Str::limit($item->name, 25) }}</h5>
-                    <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
-                    <a href="#" class="btn btn-danger">Thêm vào giỏ hàng</a>
-                </div>
+        <div class="col-6 col-md-3 col-lg-2 mb-4">
+          <div class="card shadow-lg d-flex flex-column position-relative">
+              <div class="product-image mt-2">
+                  <img src="{{ asset('uploads/' . $item->img) }}" class="lazyloaded" alt="Card image">
+              </div>
+              <div class="icons-overlay">
+                <div>
+                <i class="fas fa-eye text-white fs-3 p-2"></i>
+            </div> 
+            <div >
+                <i class="fas fa-heart text-white fs-3 p-2"></i>
             </div>
-        </div>
+            </div>
+              <span class="discount-label bg-danger">New</span>
+              <div class="card-body d-flex flex-column">
+                  <div style="height: 70px">
+                      <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
+                  </div>
+                  <p class="card-text">Giá: {{ number_format($item->price) }} VNĐ</p>
+                  <a href="#" class="btn btn-danger mt-auto">
+                      <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i>
+                  </a>
+              </div>
+          </div>
+      </div>
         @endforeach
     </div>
     <div class="mt-3 container d-flex justify-content-center align-items-center mb-5">

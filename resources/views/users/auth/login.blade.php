@@ -7,20 +7,22 @@
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-body p-5">
                         <h3 class="mb-4 text-center">Đăng Nhập</h3>
-                        
-                        <form action="/login" method="POST">
+                        <form action="{{route('login-post')}}" method="post">
                             @csrf
-
                             <div class="mb-4">
                                 <label class="form-label" for="email">Email của bạn:</label>
                                 <input type="email" id="email" name="email" class="form-control form-control-lg" required />
+                                @if ($errors->has('email'))
+                                <span class="text-danger">{{ $errors->first('email') }}</span>
+                                @endif
                             </div>
-
                             <div class="mb-4">
                                 <label class="form-label" for="password">Mật khẩu của bạn:</label>
                                 <input type="password" id="password" name="password" class="form-control form-control-lg" required />
+                                @if ($errors->has('password'))
+                                <span class="text-danger">{{ $errors->first('password') }}</span>
+                                @endif
                             </div>
-
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="remember" name="remember" />

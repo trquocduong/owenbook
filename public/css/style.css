@@ -87,7 +87,7 @@
 
 .icons-overlay {
     position: absolute;
-    top: 40%; /* Center vertically */
+    top: 30%; /* Center vertically */
     left: 50%; /* Center horizontally */
     transform: translate(
         -50%,
