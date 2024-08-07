@@ -7,16 +7,18 @@ use Illuminate\Support\Facades\Http;
 
 use App\Models\categories;
 use App\Models\Products;
+
 class HomeController extends Controller
 {
     //trang chủ
-    public function index(){
+    public function index()
+    {
         $category = categories::orderBy('id', 'desc')->limit(6)->get();
         $products = Products::orderBy('created_at', 'desc')->paginate(8);
         $bannersale = Products::orderBy('sale', 'desc')->limit(1)->first();
-        $sale =Products::where('sale', '>', 0)
-        ->orderBy('sale', 'desc')->limit(4)
-        ->paginate(10);
+        $sale = Products::where('sale', '>', 0)
+            ->orderBy('sale', 'desc')->limit(4)
+            ->paginate(10);
         $response = Http::get('https://blog.owenbook.store/api/news');
         if ($response->successful()) {
             $apiData = $response->json();
@@ -29,32 +31,42 @@ class HomeController extends Controller
             'category' => $category,
             'apiProducts' => $apiProducts,
             'bannersale' => $bannersale,
-            'sale'=>$sale,
+            'sale' => $sale,
         ]);
     }
     // tất cả sản phẩm
-    public function products(){
+    public function products()
+    {
         $products = Products::orderBy('created_at', 'desc')->paginate(8);
-        return view('users.pages.products',compact('products'));
+        return view('users.pages.products', compact('products'));
     }
     //liên hệ
-    public function contact(){
-        return view ('users.pages.contact');
+    public function contact()
+    {
+        return view('users.pages.contact');
     }
     //tìm kiếm 
-    public function search(){
-        $products = Products::orderBy('created_at', 'desc')->paginate(8);//demo sản phẩm
-        return view('users.pages.search',compact('products'));
+    public function search()
+    {
+        $products = Products::orderBy('created_at', 'desc')->paginate(8); //demo sản phẩm
+        return view('users.pages.search', compact('products'));
     }
     //chi tiết danh mục 
     // hiển thị cơ bản vài sản phẩm 
-    public function detail_category(){
-        $products = Products::orderBy('created_at', 'desc')->paginate(8);//demo sản phẩm
-        return view('users.pages.detail_category',compact('products'));
+    public function detail_category()
+    {
+        $products = Products::orderBy('created_at', 'desc')->paginate(8); //demo sản phẩm
+        return view('users.pages.detail_category', compact('products'));
     }
     //chi tiết sản phẩm
-    public function detail_products(){
+    public function detail_products()
+    {
         $products = Products::orderBy('created_at', 'desc')->limit(4)->get();
-        return view('users.pages.detail_products',compact('products'));
+        return view('users.pages.detail_products', compact('products'));
+    }
+    public function detail_product(Request $request, int $id)
+    {
+        $getonepro = Products::findOrFail($id);
+        return view('users.pages.detail', compact('getonepro'));
     }
 }
