@@ -34,7 +34,7 @@ class AuthController extends Controller
             if(Auth::attempt($crenden)){
                 $user=Auth::user();
                 if($user->role==1){
-                 return redirect()->route("dashboard")->with('success','Bạn đã đăng nhập vào trang quản trị  ');;
+                 return redirect()->route("admin")->with('success','Bạn đã đăng nhập vào trang quản trị  ');;
                 }
                 else{
                  return redirect()->route("home")->with('success','Bạn đã đăng nhập thành công');   

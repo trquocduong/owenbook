@@ -11,13 +11,13 @@ use Illuminate\Support\Str;
         <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="2000">
-              <img src="{{asset('img/banner1.png')}}" class="d-block w-100" alt="...">
+              <img src="{{asset('uploads/banner1.png')}}" class="d-block w-100" alt="...">
             </div>
              <div class="carousel-item" data-bs-interval="2000">
-                <img src="{{asset('img/banner2.png')}}" class="d-block w-100" alt="...">
+                <img src="{{asset('uploads/banner2.png')}}" class="d-block w-100" alt="...">
               </div>
             <div class="carousel-item" data-bs-interval="2000">
-              <img src="{{asset('img/banner3.png')}}" class="d-block w-100" alt="...">
+              <img src="{{asset('uploads/banner3.png')}}" class="d-block w-100" alt="...">
             </div>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
@@ -34,12 +34,12 @@ use Illuminate\Support\Str;
         <div class="row">
         <div class="col-md-12 col-6">
         <div class="card mt-2">
-            <img src="{{asset('img/banner4.png')}}" class="card-img-top" alt="...">
+            <img src="{{asset('uploads/banner4.png')}}" class="card-img-top" alt="...">
           </div>
         </div>
         <div class="col-md-12 col-6">
         <div class="card mt-2">
-            <img src="{{asset('img/banner5.png')}}" class="card-img-top" alt="...">
+            <img src="{{asset('uploads/banner5.png')}}" class="card-img-top" alt="...">
           </div>
         </div>
         </div>
@@ -57,7 +57,7 @@ use Illuminate\Support\Str;
           <div>
             <i class="fa-solid fa-layer-group fa-2x"></i>
           </div>
-          <div class="mt-2 fs-5">{{$item->name}}</div>
+          <div class="mt-2 fs-5"><a href="{{ route('products.by.category', $item->id) }}" class="nav-link">{{ Str::limit($item->name, 10) }}</a></div>
         </div>
       </div>    
       @endforeach
@@ -71,15 +71,30 @@ use Illuminate\Support\Str;
         @foreach ($sale as $item)
         <div class="col-6 col-md-3 col-lg-2 mb-4">
             <div class="card shadow-lg d-flex flex-column position-relative">
-              <div class="product-image mt-2">
-                <img src="{{asset('uploads/'.$item->img)}}" class=" lazyloaded" alt="Card image">
+              <div class="product-image mt-2" >
+                <a href="detail/{{$item->id}}"><img src="{{asset('uploads/'.$item->img)}}" class=" lazyloaded" alt="Card image"></a>
               </div>
                 <div class="icons-overlay">
                     <div>
-                    <i class="fas fa-eye text-white fs-3 p-2"></i>
+                    <a href="detail/{{$item->id}}"><i class="fas fa-eye text-white fs-3 p-2"></i></a>
                 </div> 
                 <div >
-                    <i class="fas fa-heart text-white fs-3 p-2"></i>
+                  <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                document.getElementById('heart_form_{{ $item->id }}').submit();"> <i class="fas fa-heart text-white fs-3 p-2"></i></a>
+                  <form action="/addToFavorites" method="POST" id="heart_form_{{ $item->id }}">
+                    @csrf
+                    @if(Session::has('users'))
+                    @php
+                    $users = Session::get('users');
+                    @endphp
+                    <input type="hidden" name="id_user" value="{{ $users->id }}">
+                    @endif
+                    <input type="hidden" name="id" value="{{ $item->id }}">
+                    <input type="hidden" name="name" value="{{ $item->name }}">
+                    <input type="hidden" name="img" value="{{ $item->img }}">
+                    <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                    <input type="hidden" name="description" value="{{ $item->description }}">
+                </form>
                 </div>
                 </div>
                 <span class="discount-label bg-danger">{{$item->sale}}%</span>
@@ -88,7 +103,24 @@ use Illuminate\Support\Str;
                     <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
                 </div>
                     <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
-                    <a href="#" class="btn btn-danger"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
+                    <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                  document.getElementById('cart_form_{{ $item->id }}').submit();">
+                  <i class="fa-solid fa-cart-shopping p-2 btn btn-danger" style="color: #ffffff;"></i></a>
+                    <form action="{{asset('addtocart')}}" method="POST" id="cart_form_{{ $item->id }}">
+                      @csrf
+
+                      @if(Session::has('users'))
+                      @php
+                      $users = Session::get('users');
+                      @endphp
+                      <input type="hidden" name="id_user" value="{{ $users->id }}">
+                      @endif
+                      <input type="hidden" name="id" value="{{ $item->id }}">
+                      <input type="hidden" name="name" value="{{ $item->name }}">
+                      <input type="hidden" name="img" value="{{ $item->img }}">
+                      <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                      <input type="hidden" name="description" value="{{ $item->description }}">
+                  </form>
                 </div>
             </div>
         </div>
@@ -103,26 +135,56 @@ use Illuminate\Support\Str;
         @foreach ($products as $item)
         <div class="col-6 col-md-3 col-lg-2 mb-4">
           <div class="card shadow-lg d-flex flex-column position-relative">
-              <div class="product-image mt-2">
-                  <img src="{{ asset('uploads/' . $item->img) }}" class="lazyloaded" alt="Card image">
-              </div>
+            <div class="product-image mt-2" >
+              <a href="detail/{{$item->id}}"><img src="{{asset('uploads/'.$item->img)}}" class=" lazyloaded" alt="Card image"></a>
+            </div>
               <div class="icons-overlay">
-                <div>
-                <i class="fas fa-eye text-white fs-3 p-2"></i>
-            </div> 
-            <div >
-                <i class="fas fa-heart text-white fs-3 p-2"></i>
-            </div>
-            </div>
-              <span class="discount-label bg-danger">New</span>
-              <div class="card-body d-flex flex-column">
-                  <div style="height: 70px">
-                      <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
-                  </div>
-                  <p class="card-text">Giá: {{ number_format($item->price) }} VNĐ</p>
-                  <a href="#" class="btn btn-danger mt-auto">
-                      <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i>
-                  </a>
+                  <div>
+                  <a href="detail/{{$item->id}}"><i class="fas fa-eye text-white fs-3 p-2"></i></a>
+              </div> 
+              <div >
+                <a href="#" class="dropdown-item" onclick="event.preventDefault();
+              document.getElementById('heart_form_{{ $item->id }}').submit();"> <i class="fas fa-heart text-white fs-3 p-2"></i></a>
+                <form action="/addToFavorites" method="POST" id="heart_form_{{ $item->id }}">
+                  @csrf
+                  @if(Session::has('users'))
+                  @php
+                  $users = Session::get('users');
+                  @endphp
+                  <input type="hidden" name="id_user" value="{{ $users->id }}">
+                  @endif
+                  <input type="hidden" name="id" value="{{ $item->id }}">
+                  <input type="hidden" name="name" value="{{ $item->name }}">
+                  <input type="hidden" name="img" value="{{ $item->img }}">
+                  <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                  <input type="hidden" name="description" value="{{ $item->description }}">
+              </form>
+              </div>
+              </div>
+              <span class="discount-label bg-danger">{{$item->sale}}%</span>
+              <div class="card-body">
+                <div style="height: 70px">
+                  <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
+              </div>
+                  <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
+                  <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                document.getElementById('cart_form_{{ $item->id }}').submit();">
+                <i class="fa-solid fa-cart-shopping p-2 btn btn-danger" style="color: #ffffff;"></i></a>
+                  <form action="{{asset('addtocart')}}" method="POST" id="cart_form_{{ $item->id }}">
+                    @csrf
+
+                    @if(Session::has('users'))
+                    @php
+                    $users = Session::get('users');
+                    @endphp
+                    <input type="hidden" name="id_user" value="{{ $users->id }}">
+                    @endif
+                    <input type="hidden" name="id" value="{{ $item->id }}">
+                    <input type="hidden" name="name" value="{{ $item->name }}">
+                    <input type="hidden" name="img" value="{{ $item->img }}">
+                    <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                    <input type="hidden" name="description" value="{{ $item->description }}">
+                </form>
               </div>
           </div>
       </div>
@@ -152,7 +214,7 @@ use Illuminate\Support\Str;
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                     <div class="progress-bar bg-danger" style="width: 75%"></div>
                   </div>
-                  <a href="#" class="btn btn-danger p-2 mt-3">Xem ngay</a>
+                  <a href="detail/{{$bannersale->id}}" class="btn btn-danger p-2 mt-3">Xem ngay</a>
             </div>
         </div>
     </div>
@@ -170,11 +232,11 @@ use Illuminate\Support\Str;
     @foreach($apiProducts as $item)
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
             <div class="card shadow-lg">
-                <img src="https://blog.owenbook.store/{{ $item['image'] }}"class="card-img-top" height="250px">
+                <img src="https://blog.minhdev.top/{{ $item['image'] }}"class="card-img-top" height="250px">
                 <div class="card-body">
                   <h5 class="card-title"> {{ Str::limit($item['title'], 50, '...') }}</h5>
                   <p class="card-text text-body-secondary"> {{ Str::limit($item['meta_description'], 50, '...') }}</p>
-                  <a href="https://blog.owenbook.store" class="btn btn-danger">Đọc thêm</a>
+                  <a href="https://blog.minhdev.top" class="btn btn-danger">Đọc thêm</a>
                 </div>
               </div>
         </div>

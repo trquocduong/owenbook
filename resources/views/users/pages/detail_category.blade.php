@@ -62,30 +62,66 @@
             </div>
             <div class="row text-center">
                 @foreach ($products as $item)
-                <div class="col-6 col-md-3 col-sm-6 mb-4">
-                    <div class="card shadow-lg d-flex flex-column position-relative">
-                        <img src="{{asset('uploads/'.$item->img)}}" class="card-img-top h-50" alt="Card image">
-                        <div class="icons-overlay">
-                            <div>
-                            <i class="fas fa-eye text-white fs-3 p-2"></i>
-                        </div> 
-                        <div >
-                            <i class="fas fa-heart text-white fs-3 p-2"></i>
-                        </div>
-                        </div>
-                        <span class="discount-label bg-danger">New</span>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ Str::limit($item->name, 15) }}</h5>
-                            <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
-                            <a href="#" class="btn btn-danger">Thêm vào giỏ hàng</a>
-                        </div>
+                <div class="col-6 col-md-3 col-lg-2 mb-4">
+                  <div class="card shadow-lg d-flex flex-column position-relative">
+                    <div class="product-image mt-2" >
+                      <a href="detail/{{$item->id}}"><img src="{{asset('uploads/'.$item->img)}}" class=" lazyloaded" alt="Card image"></a>
                     </div>
-                </div>
+                      <div class="icons-overlay">
+                          <div>
+                          <a href="detail/{{$item->id}}"><i class="fas fa-eye text-white fs-3 p-2"></i></a>
+                      </div> 
+                      <div >
+                        <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                      document.getElementById('heart_form_{{ $item->id }}').submit();"> <i class="fas fa-heart text-white fs-3 p-2"></i></a>
+                        <form action="/addToFavorites" method="POST" id="heart_form_{{ $item->id }}">
+                          @csrf
+                          @if(Session::has('users'))
+                          @php
+                          $users = Session::get('users');
+                          @endphp
+                          <input type="hidden" name="id_user" value="{{ $users->id }}">
+                          @endif
+                          <input type="hidden" name="id" value="{{ $item->id }}">
+                          <input type="hidden" name="name" value="{{ $item->name }}">
+                          <input type="hidden" name="img" value="{{ $item->img }}">
+                          <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                          <input type="hidden" name="description" value="{{ $item->description }}">
+                      </form>
+                      </div>
+                      </div>
+                      <span class="discount-label bg-danger">{{$item->sale}}%</span>
+                      <div class="card-body">
+                        <div style="height: 70px">
+                          <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
+                      </div>
+                          <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
+                          <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                        document.getElementById('cart_form_{{ $item->id }}').submit();">
+                        <i class="fa-solid fa-cart-shopping p-2 btn btn-danger" style="color: #ffffff;"></i></a>
+                          <form action="{{asset('addtocart')}}" method="POST" id="cart_form_{{ $item->id }}">
+                            @csrf
+        
+                            @if(Session::has('users'))
+                            @php
+                            $users = Session::get('users');
+                            @endphp
+                            <input type="hidden" name="id_user" value="{{ $users->id }}">
+                            @endif
+                            <input type="hidden" name="id" value="{{ $item->id }}">
+                            <input type="hidden" name="name" value="{{ $item->name }}">
+                            <input type="hidden" name="img" value="{{ $item->img }}">
+                            <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                            <input type="hidden" name="description" value="{{ $item->description }}">
+                        </form>
+                      </div>
+                  </div>
+              </div>
                 @endforeach
             </div>
-            <div class="mt-3 container d-flex justify-content-center align-items-center mb-5">
+            {{-- <div class="mt-3 container d-flex justify-content-center align-items-center mb-5">
                 {{$products->links('pagination::bootstrap-4')}}
-            </div>
+            </div> --}}
         </div>
     </div>
   

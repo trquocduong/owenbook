@@ -56,31 +56,54 @@
                      </tr>
                   </thead>
                   <tbody>
+                    @php
+                    $totalPrice = 0;
+                    $user = Session::get('user');
+                    @endphp
+                      @foreach($favorites as $item)
                      <tr>
                         <td class="product-thumbnail">
-                           <a href="shop-details.html"><img src="" alt="">
+                           <a href="shop-details.html"><img src="{{'uploads/'.$item->img }}" alt="" width="70px" height="70px">
                            </a>
                         </td>
                         <td class="product-name">
-                           <a href="shop-details.html"></a>
+                           <a href="" class="nav-link">{{ $item->name_product }}</a>
                         </td>
                         <td class="product-price">
-                           <span class="amount"></span>
+                           <span class="amount">{{ number_format($item->price, 2) }} VNĐ</span>
                         </td>
                         <td class="product-add-to-cart">
-                           <button class="btn btn-danger">Thêm vào giỏ hàng</button>
+                           <button class="btn btn-danger">Thêm vào sản phẩm</button>
                         </td>
-                        <td class="product-remove text-center">
-                          <i class="fa-solid fa-trash"></i>
-                        </td>
+                        <td class="product-remove">
+                          <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                            document.getElementById('heart_delete_{{ $item->id }}').submit();"><i class="fa fa-times"></i></a>
+                          <form action="removefavorites" method="POST" id="heart_delete_{{ $item->id }}">
+                             @csrf
+                             @if(Session::has('user'))
+                             <input type="hidden" name="id_user" value="{{ $user->id }}">
+                             <input type="hidden" name="id" value="{{ $item->id }}">
+                             @endif
+                         </form>
+                      </td>
                      </tr>
+                     @endforeach
                   </tbody>
             </table>
          </div>
       </form>
-      <div class="p-2 mb-3">
-        <button class="btn btn-danger">Xoá tất cả</button>
-    </div>
+    </form>
+    <div class="p-2 mb-3">
+      <form action="{{ route('remove.all.favorites') }}" method="POST">
+          @csrf
+          @if(Session::has('user'))
+          <input type="hidden" name="id_user" value="{{ $user->id }}">
+          <button type="submit" class="btn btn-danger">
+              Xóa tất cả sản phẩm
+          </button>
+          @endif
+      </form>
+  </div>
 </div>
   </div>
 </div>

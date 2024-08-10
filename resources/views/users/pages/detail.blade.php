@@ -39,44 +39,126 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
-
-            <div class="row">
-
-                <div class="col">
-                    <strong class="text-danger">Tên sản phẩm</d>
-                </div>
-                <div class="col">
-                    <a href="#"><i class="fas fa-star text-warning"></i></a>
-                    <a href="#"><i class="fas fa-star text-warning"></i></a>
-                    <a href="#"><i class="fas fa-star text-warning"></i></a>
-                </div>
-                <div class="col">
-                    <a class="">{{$getonepro->view}} Người xem</a>
-                </div>
-                <div class="col">
-                    <h2 class="text-dark">{{$getonepro->name}}</h2>
-                </div>
-                <div class="col">
-                    <h2 class=""><strong>{{$getonepro->price}}</strong></h2>
-                </div>
-                <div class="col">
-                    <div class="counter-container">
-                        <div class="d-flex flex-row bd-highlight mb-3">
-                            <button class="p-2 bd-highlight">-</button>
-                            <button class="p-2 bd-highlight">{{$getonepro->quantity}}</button>
-                            <button class="p-2 bd-highlight">+</button>
-                            <button type="button" class="btn btn-secondary">Secondary</button>
-                        </div>
-
-
+        <div class="col-lg-5">
+            <!-- Phần thông tin sản phẩm -->
+            <h2 class="mb-3">{{$getonepro->name}}</h2>
+            <p class="text-muted mb-3">{{ Str::limit($getonepro->description, 50) }}</p>
+            <p class="text-muted mb-3">Tác giả:{{$getonepro->author}}</p>
+            <h4 class="text-success mb-3">Giá:{{ number_format($getonepro->price) }}VNĐ</h4>
+            <form action="#" method="post">
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Số lượng</label>
+                    <div class="input-group" style="width:150px" >
+                        <button class="btn btn-outline-secondary" type="button" id="decrement">-</button>
+                        <input type="number" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" />
+                        <button class="btn btn-outline-secondary" type="button" id="increment">+</button>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <p>Uu Đãi</p>
-            </div>
+            </form>
+            <a href="#" class="dropdown-item" onclick="event.preventDefault();
+            document.getElementById('cart_form_{{ $getonepro->id }}').submit();">
+          <button type="submit" class="btn btn-danger btn-lg mb-3">Thêm vào giỏ hàng</button></a>
+              <form action="{{asset('addtocart')}}" method="POST" id="cart_form_{{ $getonepro->id }}">
+                @csrf
+
+                @if(Session::has('users'))
+                @php
+                $users = Session::get('users');
+                @endphp
+                <input type="hidden" name="id_user" value="{{ $users->id }}">
+                @endif
+                <input type="hidden" name="id" value="{{ $getonepro->id }}">
+                <input type="hidden" name="name" value="{{ $getonepro->name }}">
+                <input type="hidden" name="img" value="{{ $getonepro->img }}">
+                <input type="hidden" name="price" value="{{ $getonepro->discounted_price }}">
+                <input type="hidden" name="description" value="{{ $getonepro->description }}">
+            </form>
+            <button type="submit" class="btn btn-danger btn-lg">Mua ngay</button>
         </div>
+        <div class="col-2">
+            <ul class="list-group">
+                <li class="list-group-item d-flex align-items-center bg-light">
+                    <i class="fa-solid fa-truck-moving me-3 fs-3"></i>
+                    <p class="mb-0">Miễn phí vận chuyển áp dụng cho tất cả đơn hàng trên 500k</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center bg-light">
+                    <i class="fa-solid fa-layer-group me-3 fs-3"></i>
+                    <p class="mb-0">Đảm bảo 100% sản phẩm như ảnh</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center bg-light">
+                    <i class="fa-solid fa-hand-holding-heart me-3 fs-3"></i>
+                    <p class="mb-0">Hoàn trả 1 ngày nếu bạn thay đổi tâm trí của bạn</p>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <h3 class="text-center">Mô tả</h3>
+            <p>{{$getonepro->description}}</p>
+            </div>
+            <div class="container">
+                <h3 class="mt-5 mb-5">Sản phẩm tương tự</h3>
+                <div class="container">
+                    <div class="row text-center">
+                        @foreach ($products as $item)
+                        <div class="col-6 col-md-3 col-lg-2 mb-4">
+                          <div class="card shadow-lg d-flex flex-column position-relative">
+                            <div class="product-image mt-2" >
+                              <a href="detail/{{$item->id}}"><img src="{{asset('uploads/'.$item->img)}}" class=" lazyloaded" alt="Card image"></a>
+                            </div>
+                              <div class="icons-overlay">
+                                  <div>
+                                  <a href="detail/{{$item->id}}"><i class="fas fa-eye text-white fs-3 p-2"></i></a>
+                              </div> 
+                              <div >
+                                <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                              document.getElementById('heart_form_{{ $item->id }}').submit();"> <i class="fas fa-heart text-white fs-3 p-2"></i></a>
+                                <form action="/addToFavorites" method="POST" id="heart_form_{{ $item->id }}">
+                                  @csrf
+                                  @if(Session::has('users'))
+                                  @php
+                                  $users = Session::get('users');
+                                  @endphp
+                                  <input type="hidden" name="id_user" value="{{ $users->id }}">
+                                  @endif
+                                  <input type="hidden" name="id" value="{{ $item->id }}">
+                                  <input type="hidden" name="name" value="{{ $item->name }}">
+                                  <input type="hidden" name="img" value="{{ $item->img }}">
+                                  <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                                  <input type="hidden" name="description" value="{{ $item->description }}">
+                              </form>
+                              </div>
+                              </div>
+                              <span class="discount-label bg-danger">{{$item->sale}}%</span>
+                              <div class="card-body">
+                                <div style="height: 70px">
+                                  <a href="" class="nav-link" title="">{{ Str::limit($item->name, 50) }}</a>
+                              </div>
+                                  <p class="card-text">Giá:{{ number_format($item->price) }}VNĐ</p>
+                                  <a href="#" class="dropdown-item" onclick="event.preventDefault();
+                                document.getElementById('cart_form_{{ $item->id }}').submit();">
+                                <i class="fa-solid fa-cart-shopping p-2 btn btn-danger" style="color: #ffffff;"></i></a>
+                                  <form action="{{asset('addtocart')}}" method="POST" id="cart_form_{{ $item->id }}">
+                                    @csrf
+                
+                                    @if(Session::has('users'))
+                                    @php
+                                    $users = Session::get('users');
+                                    @endphp
+                                    <input type="hidden" name="id_user" value="{{ $users->id }}">
+                                    @endif
+                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                    <input type="hidden" name="name" value="{{ $item->name }}">
+                                    <input type="hidden" name="img" value="{{ $item->img }}">
+                                    <input type="hidden" name="price" value="{{ $item->discounted_price }}">
+                                    <input type="hidden" name="description" value="{{ $item->description }}">
+                                </form>
+                              </div>
+                          </div>
+                      </div>
+                        @endforeach
+                    </div>
+                  </div>
+            </div>
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -94,5 +176,23 @@
             document.querySelector('#mainImage img').src = this.getAttribute('data-image');
         });
     });
+        document.addEventListener('DOMContentLoaded', function() {
+        const quantityInput = document.getElementById('quantity');
+        const decrementBtn = document.getElementById('decrement');
+        const incrementBtn = document.getElementById('increment');
+
+        decrementBtn.addEventListener('click', function() {
+            let value = parseInt(quantityInput.value, 10);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+
+        incrementBtn.addEventListener('click', function() {
+            let value = parseInt(quantityInput.value, 10);
+            quantityInput.value = value + 1;
+        });
+    }); 
+
     </script>
     @endsection

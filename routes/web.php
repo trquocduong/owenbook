@@ -11,10 +11,18 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\BillsController;
-
+use App\Http\Controllers\FavouriteController;
+Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::post('/profile/update', [UserController::class, 'update_profile'])->name('profile.update');
+Route::get('/profile/order', [UserController::class, 'profile_order'])->name('profile.order');
+Route::get('/profile/detail_order/{id}', [UserController::class, 'detail_order'])->name('profile.detail_order');
+Route::get('/change_password', [UserController::class, 'change_password'])->name('change_password');
+Route::post('/password/update', [UserController::class, 'update'])->name('password.update');
 Route::prefix('/')->controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/products', 'products')->name('products');
+    Route::post('/filter','fillter')->name('fillter');
+    Route::post('/filterview','fillterview')->name('fillterview');
     Route::get('/contact', 'contact')->name('contact');
     Route::get('/search', 'search')->name('search');
     Route::get('/detail_category', 'detail_category')->name('detail_category');
@@ -25,7 +33,7 @@ Route::prefix('/')->controller(HomeController::class)->group(function () {
     Route::get('/contact', 'contact')->name('contact');
     Route::get('/search', 'search')->name('search');
     Route::get('/detail_category', 'detail_category')->name('detail_category');
-    Route::get('/detail_products', 'detail_products')->name('detail_products');
+    Route::get('/category/{category_id}', 'get_products_by_idcategory')->name('products.by.category');
 });
 Route::prefix('/')->controller(AuthController::class)->group(function () {
     Route::get('/login', 'login')->name('login');
@@ -35,9 +43,19 @@ Route::prefix('/')->controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout')->name('logout');
 });
 Route::prefix('/')->controller(CartController::class)->group(function () {
-    Route::get('/heart', 'heart')->name('heart');
     Route::get('/cart', 'cart')->name('cart');
+    Route::post('/addtocart','addToCart');
+    Route::post('/removecart','removeCart')->name('remove.cart'); //xóa
+    Route::post('/removecart/header','removeCartheader')->name('remove.cart.header'); //xóa
+    Route::post('/remove-all-cart','removeAllCart')->name('remove.all.cart');
 });
+Route::prefix('/')->controller(FavouriteController::class)->group(function () {
+    Route::get('/heart', 'heart')->name('heart');
+    Route::post('/addToFavorites','addToFavorites');
+    Route::post('/removefavorites','removeFavarites')->name('removefavorites'); //xóa
+    Route::post('/remove-all-favorites', 'removeAllFavarites')->name('remove.all.favorites');
+});
+//admin 
 Route::prefix('/')->controller(AdminController::class)->group(function () {
     Route::get('/admin', 'admin')->name('admin');
 });
@@ -81,6 +99,4 @@ Route::prefix('/')->controller(BillsController::class)->group(function () {
     Route::post('/bills/{id}/approve', 'approve')->name('bills.approve');
     Route::delete('/bills/{id}/cancel', 'cancel')->name('bills.cancel'); // huỷ đơn
     Route::delete('/bills/{id}', 'destroy')->name('bills.destroy'); //xoá
-
-
 });

@@ -8,6 +8,7 @@ use App\Models\Carts;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -55,7 +56,7 @@ class UserController extends Controller
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập xem thông tin người dùng.');
         }
         $user = Auth::user();
-        return view('components.profile', compact('user'));
+        return view('users.pages.profile', compact('user'));
     }
 
     public function update_profile(Request $request)
@@ -81,12 +82,34 @@ class UserController extends Controller
         $orders = Bills::where('id_user', Auth::id())
             ->orderBy('status', 'asc')
             ->get();
-        return view('components.profile_order', compact('orders'));
+            $user = Auth::user();
+        return view('users.pages.profile_order', compact('orders','user'));
     }
     public function detail_order(Request $request, $id)
     {
         $order = Bills::where('id_bill', $id)->first();
         $products = json_decode($order->product, true);
-        return view('components.profile_detail_order', compact('order', 'products'));
+        return view('users.pages.profile_detai_order', compact('order', 'products'));
+    }
+    public function change_password(){
+        return view('users.auth.change_pass');
+    }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, Auth::user()->password)) {
+                    $fail('Mật khẩu hiện tại không đúng.');
+                }
+            }],
+            'new_password' => ['required', 'string', 'confirmed'],
+            'new_password_confirmation' => ['required'],
+        ]);
+
+        $user = Auth::user();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('home')->with('status', 'Mật khẩu đã được thay đổi thành công.');
     }
 }
