@@ -34,19 +34,26 @@
     font-size: 24px;
     cursor: pointer;
 }
+
 .carousel-item img {
-    object-fit: cover; /* Maintain aspect ratio and cover container */
-    height: 400px; /* Set a specific height */
+    object-fit: cover;
+    /* Maintain aspect ratio and cover container */
+    height: 400px;
+    /* Set a specific height */
 }
+
 .accordion-container {
-    position: absolute; /* or position: absolute; depending on your needs */
+    position: absolute;
+    /* or position: absolute; depending on your needs */
     /* top: 0;  */
-    left: 50px;
+
     width: 200px;
 }
+
 .card img {
     /* Maintain aspect ratio and cover container */
-    height: 190px; /* Set a specific height */
+    height: 190px;
+    /* Set a specific height */
 }
 
 /* Hide col-2 on smaller screens */
@@ -54,52 +61,70 @@
     .col-md-2 {
         display: none;
     }
+
     .carousel-item img {
         /* object-fit: cover;  */
-        height: 250px; /* Set a specific height */
+        height: 250px;
+        /* Set a specific height */
     }
+
     .card img {
         /* Maintain aspect ratio and cover container */
-        height: 100px; /* Set a specific height */
+        height: 100px;
+        /* Set a specific height */
     }
+
     .footer-section {
         text-align: center;
     }
+
     .footer-section .row {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
+
     .footer-section .col-md-3,
     .footer-section .col-md-2 {
         margin-bottom: 1.5rem;
     }
 }
+
 .card {
-    position: relative; /* Ensure the icons are positioned relative to the card */
-    overflow: hidden; /* Hide overflow to ensure icons don't spill out */
+    position: relative;
+    /* Ensure the icons are positioned relative to the card */
+    overflow: hidden;
+    /* Hide overflow to ensure icons don't spill out */
 }
 
 .card-img-top {
-    height: 50%; /* Set image height to 50% of the card's height */
-    object-fit: cover; /* Ensure image covers the area without distortion */
+    height: 50%;
+    /* Set image height to 50% of the card's height */
+    object-fit: cover;
+    /* Ensure image covers the area without distortion */
 }
 
 .icons-overlay {
     position: absolute;
-    top: 30%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(
-        -50%,
-        -50%
-    ); /* Adjust position to be exactly in the middle */
+    top: 30%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%,
+            -50%);
+    /* Adjust position to be exactly in the middle */
     display: flex;
-    gap: 15px; /* Space between icons */
-    opacity: 0; /* Initially hidden */
-    transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+    gap: 15px;
+    /* Space between icons */
+    opacity: 0;
+    /* Initially hidden */
+    transition: opacity 0.3s ease;
+    /* Smooth transition for hover effect */
 }
+
 .card:hover .icons-overlay {
-    opacity: 1; /* Show icons on hover */
+    opacity: 1;
+    /* Show icons on hover */
 }
 
 .discount-label {
@@ -110,32 +135,42 @@
     color: #fff;
     padding: 5px 10px;
     border-radius: 5px;
-    opacity: 0; /* Initially hidden */
-    transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+    opacity: 0;
+    /* Initially hidden */
+    transition: opacity 0.3s ease;
+    /* Smooth transition for hover effect */
 }
 
 .card:hover .discount-label {
-    opacity: 1; /* Show discount label on hover */
+    opacity: 1;
+    /* Show discount label on hover */
 }
+
 .card img {
     object-fit: cover;
 }
+
 /* Định kiểu cho các liên kết phân trang */
 .pagination .page-item .page-link {
-    color: black; /* Màu chữ của liên kết */
+    color: black;
+    /* Màu chữ của liên kết */
 }
 
 .pagination .page-item.active .page-link {
-    background-color: red; /* Màu nền của trang hiện tại */
-    border-color: red; /* Màu viền của trang hiện tại */
+    background-color: red;
+    /* Màu nền của trang hiện tại */
+    border-color: red;
+    /* Màu viền của trang hiện tại */
 }
 
 .pagination .page-item:hover .page-link {
-    color: darkred; /* Màu chữ khi di chuột qua liên kết */
+    color: darkred;
+    /* Màu chữ khi di chuột qua liên kết */
 }
+
 body {
     margin-top: 20px;
-    background-color: #f2f6fc;
+
     color: #69707a;
 }
 
@@ -208,18 +243,24 @@ body {
     outline: none;
     box-shadow: none;
 }
+
 @media (max-width: 1024px) {
     .carousel-item img {
-        height: 250px; /* Adjust height for tablets */
+        height: 250px;
+        /* Adjust height for tablets */
     }
+
     .accordion-container {
-        position: absolute; /* or position: absolute; depending on your needs */
+        position: absolute;
+        /* or position: absolute; depending on your needs */
         /* top: 0;  */
         left: 5px;
         width: 200px;
     }
+
     .card img {
         /* Maintain aspect ratio and cover container */
-        height: 110px; /* Set a specific height */
+        height: 110px;
+        /* Set a specific height */
     }
 }

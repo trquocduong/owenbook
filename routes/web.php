@@ -12,6 +12,14 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\BillsController;
 use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\BankController;
+
+Route::get('/laylsgd', [BankController::class, 'laylsgd']);
+Route::post('/store-bank-data', [BankController::class, 'storeBankData']);
+Route::get('/getallbank', [BankController::class, 'getallbank'])->name('getallbank');
+Route::get('/autoxnd', [BankController::class, 'updateBillStatuses'])->name('updateBillStatuses');
+Route::get('/tool', [BankController::class, 'tool'])->name('tool');
+
 Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 Route::post('/profile/update', [UserController::class, 'update_profile'])->name('profile.update');
 Route::get('/profile/order', [UserController::class, 'profile_order'])->name('profile.order');
@@ -21,8 +29,8 @@ Route::post('/password/update', [UserController::class, 'update'])->name('passwo
 Route::prefix('/')->controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/products', 'products')->name('products');
-    Route::post('/filter','fillter')->name('fillter');
-    Route::post('/filterview','fillterview')->name('fillterview');
+    Route::post('/filter', 'fillter')->name('fillter');
+    Route::post('/filterview', 'fillterview')->name('fillterview');
     Route::get('/contact', 'contact')->name('contact');
     Route::get('/search', 'search')->name('search');
     Route::get('/detail_category', 'detail_category')->name('detail_category');
@@ -44,15 +52,17 @@ Route::prefix('/')->controller(AuthController::class)->group(function () {
 });
 Route::prefix('/')->controller(CartController::class)->group(function () {
     Route::get('/cart', 'cart')->name('cart');
-    Route::post('/addtocart','addToCart');
-    Route::post('/removecart','removeCart')->name('remove.cart'); //xóa
-    Route::post('/removecart/header','removeCartheader')->name('remove.cart.header'); //xóa
-    Route::post('/remove-all-cart','removeAllCart')->name('remove.all.cart');
+    Route::post('/addtocart', 'addToCart');
+    Route::post('/removecart', 'removeCart')->name('remove.cart'); //xóa
+    Route::post('/removecart/header', 'removeCartheader')->name('remove.cart.header'); //xóa
+    Route::post('/remove-all-cart', 'removeAllCart')->name('remove.all.cart');
 });
+Route::post('/decreasecart', [CartController::class, 'decreaseCart'])->name('decrease.cart');
+Route::post('/increasecart', [CartController::class, 'increaseCart'])->name('increase.cart');
 Route::prefix('/')->controller(FavouriteController::class)->group(function () {
     Route::get('/heart', 'heart')->name('heart');
-    Route::post('/addToFavorites','addToFavorites');
-    Route::post('/removefavorites','removeFavarites')->name('removefavorites'); //xóa
+    Route::post('/addToFavorites', 'addToFavorites');
+    Route::post('/removefavorites', 'removeFavarites')->name('removefavorites'); //xóa
     Route::post('/remove-all-favorites', 'removeAllFavarites')->name('remove.all.favorites');
 });
 //admin 
@@ -96,7 +106,13 @@ Route::prefix('/')->controller(InventoryController::class)->group(function () {
 });
 Route::prefix('/')->controller(BillsController::class)->group(function () {
     Route::get('/bill_index', 'bill_index')->name('bill_index');
+    Route::get('/showbill/{id}', [BillsController::class, 'showBilladmin'])->name('bill.show');
+
     Route::post('/bills/{id}/approve', 'approve')->name('bills.approve');
     Route::delete('/bills/{id}/cancel', 'cancel')->name('bills.cancel'); // huỷ đơn
     Route::delete('/bills/{id}', 'destroy')->name('bills.destroy'); //xoá
 });
+Route::get('/order-bill', [BillsController::class, 'order_bill']);
+Route::post('/createbill', [BillsController::class, 'createBill']);
+Route::post('/calculate-total', [BillsController::class, 'calculateTotal']);
+Route::get('/bill/{id}', [BillsController::class, 'showBill'])->name('bill.show');

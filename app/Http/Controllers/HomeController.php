@@ -40,11 +40,11 @@ class HomeController extends Controller
         $categoryId = $request->input('category_id');
         $sort = $request->input('sort', 'price-asc');
         $query = Products::query();
-    
+
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-    
+
         switch ($sort) {
             case 'price-asc':
                 $query->orderBy('price', 'asc');
@@ -62,17 +62,25 @@ class HomeController extends Controller
         $products = $query->paginate(12); // Paginate products, adjust per page as needed
         return view('users.pages.products', compact('products', 'categories'));
     }
-    
+
     //liên hệ
     public function contact()
     {
         return view('users.pages.contact');
     }
     //tìm kiếm 
-    public function search()
+    // public function search()
+    // {
+    //     $products = Products::orderBy('created_at', 'desc')->paginate(8); //demo sản phẩm
+    //     return view('users.pages.search', compact('products'));
+    // }
+    public function search(Request $request)
     {
-        $products = Products::orderBy('created_at', 'desc')->paginate(8); //demo sản phẩm
-        return view('users.pages.search', compact('products'));
+
+        $query = $request->input('query');
+        $products = Products::where('name', 'LIKE', "%$query%")->paginate(5);
+        // $pagina = Products::paginate(5);
+        return view('users.pages.search', compact('products', 'query'));
     }
     //chi tiết danh mục 
     // hiển thị cơ bản vài sản phẩm 
@@ -96,6 +104,6 @@ class HomeController extends Controller
     {
         $getonepro = Products::findOrFail($id);
         $products = Products::orderBy('created_at', 'desc')->limit(6)->get();
-        return view('users.pages.detail', compact('getonepro','products'));
+        return view('users.pages.detail', compact('getonepro', 'products'));
     }
 }

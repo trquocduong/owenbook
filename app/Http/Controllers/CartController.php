@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Carts;
 use App\Models\Products;
+
 class CartController extends Controller
 {
-    public function cart(){
+    public function cart()
+    {
         if (!auth()->check()) {
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để xem giỏ hàng.');
         }
@@ -19,8 +21,8 @@ class CartController extends Controller
             $total += $item->total;
         }
         $count = count($cart);
-    
-        return view('users.pages.cart', compact('cart','count','total')); 
+
+        return view('users.pages.cart', compact('cart', 'count', 'total'));
     }
     public function addToCart(Request $request)
     {
@@ -32,7 +34,7 @@ class CartController extends Controller
         $cartItem = Carts::where('id_user', $id_user)
             ->where('id_product', $id_product)
             ->first();
-    
+
         if ($cartItem) {
             $cartItem->increment('quantity');
             $cartItem->total = $cartItem->price * $cartItem->quantity;
@@ -45,27 +47,57 @@ class CartController extends Controller
                 'img' => $request->img,
                 'price' => $request->price,
                 'total' => $request->price,
-                'quantity' => 1,
+                'quantity' => $request->quantity,
             ]);
         }
         $product = Products::findOrFail($request->id);
         $cart = Carts::where('id_user', $id_user)->get();
         return redirect()->route('home')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
     }
+    public function decreaseCart(Request $request)
+    {
+        $idProduct = $request->input('id');
+        $id_user = $request->input('id_user');
+        $cartItem = Carts::where('id', $idProduct)
+            ->where('id_user', $id_user)
+            ->first();
+        if ($cartItem) {
+            if ($cartItem->quantity > 1) {
+                $cartItem->decrement('quantity');
+                $cartItem->total = $cartItem->price * $cartItem->quantity;
+                $cartItem->save();
+            }
+        }
+        return redirect()->route('cart');
+    }
+    public function increaseCart(Request $request)
+    {
+        $idProduct = $request->input('id');
+        $id_user = $request->input('id_user');
+        $cartItem = Carts::where('id', $idProduct)
+            ->where('id_user', $id_user)
+            ->first();
+        if ($cartItem) {
+            $cartItem->increment('quantity');
+            $cartItem->total = $cartItem->price * $cartItem->quantity;
+            $cartItem->save();
+        }
+        return redirect()->route('cart');
+    }
 
     public function removeCart(Request $request)
-{
-    $id = $request->input('id');
-    $id_user = $request->input('id_user');
-    $cartItem = Carts::where('id', $id)
-        ->where('id_user', $id_user)
-        ->first();
-    if ($cartItem) {
-        $cartItem->delete();
-        return redirect()->route('cart')->with('success', 'Sản phẩm đã được xóa khỏi giỏ hàng!');
+    {
+        $id = $request->input('id');
+        $id_user = $request->input('id_user');
+        $cartItem = Carts::where('id', $id)
+            ->where('id_user', $id_user)
+            ->first();
+        if ($cartItem) {
+            $cartItem->delete();
+            return redirect()->route('cart')->with('success', 'Sản phẩm đã được xóa khỏi giỏ hàng!');
+        }
+        return redirect()->route('cart')->with('error', 'Không tìm thấy sản phẩm trong giỏ hàng.');
     }
-    return redirect()->route('cart')->with('error', 'Không tìm thấy sản phẩm trong giỏ hàng.');
-}
     public function removeCartheader(Request $request)
     {
         $id = $request->input('id');
@@ -75,15 +107,15 @@ class CartController extends Controller
         }
         return redirect()->back()->with('success', 'Sản phẩm đã được xóa khỏi giỏ hàng.');
     }
-public function removeAllCart(Request $request)
-{
-    $id_user = $request->input('id_user');
-    $deleted = Carts::where('id_user', $id_user)->delete();
+    public function removeAllCart(Request $request)
+    {
+        $id_user = $request->input('id_user');
+        $deleted = Carts::where('id_user', $id_user)->delete();
 
-    if ($deleted) {
-        return redirect()->route('cart')->with('success', 'Đã xóa tất cả sản phẩm khỏi giỏ hàng!');
-    } else {
-        return redirect()->route('cart')->with('error', 'Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại sau.');
+        if ($deleted) {
+            return redirect()->route('cart')->with('success', 'Đã xóa tất cả sản phẩm khỏi giỏ hàng!');
+        } else {
+            return redirect()->route('cart')->with('error', 'Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại sau.');
+        }
     }
-}
 }
